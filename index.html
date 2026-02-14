@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>💘</title>
+
+<style>
+:root{
+  --bg:#8B0E2B;
+  --card:#4C0519;
+  --text:#FFF1F2;
+  --muted: rgba(255,241,242,0.82);
+
+  --green1:#16a34a;
+  --green2:#22c55e;
+
+  --red1:#b91c1c;
+  --red2:#ef4444;
+
+  --pink1:#FB7185;
+  --pink2:#FDA4AF;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background: var(--bg);
+  overflow:hidden;
+}
+
+.card{
+  width:min(680px, 94vw);
+  background: rgba(76, 5, 25, 0.92);
+  border-radius:22px;
+  padding:26px 18px 20px;
+  text-align:center;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+  border:1px solid rgba(255,241,242,0.18);
+}
+
+.view{ display:none; }
+.view.active{ display:block; }
+
+h1{
+  margin: 4px 0 10px;
+  font-size: 26px;
+  color:#fff;
+}
+
+.subtitle{
+  margin:0 0 14px;
+  color: var(--muted);
+  font-size:15px;
+}
+
+.tip{
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(255,241,242,0.75);
+}
+
+.btns{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top: 12px;
+}
+
+button{
+  border:0;
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  min-width: 200px;
+}
+
+.yes{
+  background: linear-gradient(90deg, var(--green1), var(--green2));
+  color:#06210f;
+}
+
+.red{
+  background: linear-gradient(90deg, var(--red1), var(--red2));
+  color:#240606;
+}
+
+/* Otwórz ekran */
+.openBtn{
+  margin-top:16px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:none;
+  background: linear-gradient(135deg, var(--pink1), var(--pink2));
+  color:#2a0610;
+  font-weight:900;
+  cursor:pointer;
+}
+
+/* Serce */
+.loveWrap{
+  margin: 12px auto;
+  width:min(300px, 75vw);
+  position:relative;
+}
+
+.heart{
+  width: 240px;
+  height: 220px;
+  margin:auto;
+  position:relative;
+  clip-path: path("M128 222C128 222 20 154 20 85C20 45 48 20 82 20C104 20 121 32 128 45C135 32 152 20 174 20C208 20 236 45 236 85C236 154 128 222 128 222Z");
+  background: url("photo2.jpg") center/cover no-repeat;
+  filter: drop-shadow(0 16px 40px rgba(0,0,0,0.45));
+}
+
+.msg{
+  margin-top: 12px;
+  font-size: 16px;
+  line-height:1.5;
+}
+
+.sign{
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(255,241,242,0.8);
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="card">
+
+<!-- EKRAN 1 -->
+<section id="viewAsk" class="view active">
+  <h1>Drogie Cebulki! Czy zostaniecie moją Walentynką?</h1>
+  <p class="subtitle"></p>
+
+  <div class="btns">
+    <button class="yes" id="btnYes">Tak</button>
+    <button class="red" id="btnRed">Tak, ale czerwone</button>
+  </div>
+
+  <div class="tip">Tylko jedna odpowiedź jest prawidłowa.</div>
+</section>
+
+<!-- EKRAN 2 -->
+<section id="viewOpen" class="view">
+  <h1>Ufff, dobrze wybraliście!</h1>
+  <button class="openBtn" id="btnOpen">Otwórzcie Walentynkę</button>
+</section>
+
+<!-- EKRAN 3 -->
+<section id="viewLove" class="view">
+  <div class="loveWrap">
+    <div class="heart"></div>
+  </div>
+
+  <div class="msg">
+    Trzymajcie się, moje Cebulki. <br/>
+    Bardzo Was kocham i tęsknię!
+  </div>
+
+  <div class="sign">
+    — Ciocia Natalia 💘
+  </div>
+</section>
+
+</main>
+
+<script>
+const viewAsk = document.getElementById("viewAsk");
+const viewOpen = document.getElementById("viewOpen");
+const viewLove = document.getElementById("viewLove");
+
+document.getElementById("btnYes").onclick = goOpen;
+document.getElementById("btnRed").onclick = goOpen;
+document.getElementById("btnOpen").onclick = goLove;
+
+function goOpen(){
+  viewAsk.classList.remove("active");
+  viewOpen.classList.add("active");
+}
+
+function goLove(){
+  viewOpen.classList.remove("active");
+  viewLove.classList.add("active");
+}
+</script>
+
+</body>
+</html>
