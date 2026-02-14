@@ -7,7 +7,7 @@
 
   <style>
     :root{
-      --bg:#7A0B25;        /* ciemniejsze, mniej “po oczach” */
+      --bg:#7A0B25;
       --card:#4C0519;
       --text:#FFF1F2;
       --muted: rgba(255,241,242,0.82);
@@ -71,7 +71,7 @@
     }
 
     h1{
-      margin: 4px 0 10px;
+      margin: 4px 0 8px;
       font-size: 26px;
       line-height:1.2;
       letter-spacing:0.2px;
@@ -79,7 +79,7 @@
     }
 
     .subtitle{
-      margin:4px 0 16px;
+      margin: 6px 0 16px;
       color: var(--muted);
       font-size: 18px;
       font-weight: 500;
@@ -152,76 +152,17 @@
       box-shadow: 0 16px 40px rgba(0,0,0,0.35);
     }
 
-    /* Ekran 3: serce */
+    /* Ekran 3 */
     .loveWrap{
-      margin: 12px auto 10px;
-      width:min(420px, 90%);
+      margin: 6px auto 12px;
       display:grid;
       place-items:center;
       gap:10px;
     }
 
-    .heartBox{
-      width: 320px;
-      height: 300px;
-      position:relative;
+    .heartStage{
+      width:min(360px, 82vw);
       filter: drop-shadow(0 16px 40px rgba(0,0,0,0.45));
-    }
-
-    /* Warstwa serca (tło + połysk) */
-    .heartBg{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.65), transparent 40%),
-        linear-gradient(135deg, var(--pink1), var(--pink2));
-      clip-path: path("M160 290C160 290 20 200 20 120C20 55 65 20 120 20C145 20 165 32 160 60C155 32 175 20 200 20C255 20 300 55 300 120C300 200 160 290 160 290Z");
-      border-radius: 24px; /* fallback */
-      overflow:hidden;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-
-    @keyframes pulse{
-      0%,100%{ transform: scale(1); }
-      50%{ transform: scale(1.04); }
-    }
-
-    /* Zdjęcie jako IMG, maskowane sercem */
-    .heartImg{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      /* Najważniejsze: tu ustawiasz kadr */
-      object-position: 50% 30%;
-      clip-path: path("M160 290C160 290 20 200 20 120C20 55 65 20 120 20C145 20 165 32 160 60C155 32 175 20 200 20C255 20 300 55 300 120C300 200 160 290 160 290Z");
-      border-radius: 24px; /* fallback */
-      opacity:0;
-      transform: scale(1.02);
-      transition: opacity 650ms ease, transform 650ms ease;
-      filter: saturate(1.03) contrast(1.03);
-    }
-
-    .showPhoto .heartImg{
-      opacity:1;
-      transform: scale(1);
-    }
-
-    /* Połysk bez “plamy” */
-    .shine{
-      position:absolute;
-      inset:-55%;
-      background: linear-gradient(120deg, transparent 45%, rgba(255,255,255,0.33) 50%, transparent 55%);
-      transform: rotate(12deg);
-      animation: shine 2.2s linear infinite;
-      pointer-events:none;
-      mix-blend-mode: screen;
-      opacity:0.85;
-    }
-    @keyframes shine{
-      from{ transform: translateX(-40%) rotate(12deg); }
-      to{ transform: translateX(40%) rotate(12deg); }
     }
 
     .msg{
@@ -256,9 +197,18 @@
       to{ transform: translateY(-120vh); opacity:0; }
     }
 
-    @media (max-width: 420px){
-      .heartBox{ width: 280px; height: 270px; }
+    /* Fade-in zdjęcia w sercu */
+    .photoHidden{ opacity:0; transition: opacity 650ms ease; }
+    .photoShown{ opacity:1; }
+
+    /* Mały komunikat debug, gdyby zdjęcie nie ładowało się */
+    .debug{
+      margin-top:10px;
+      font-size:12px;
+      color: rgba(255,241,242,0.75);
+      display:none;
     }
+    .debug.show{ display:block; }
   </style>
 </head>
 
@@ -268,8 +218,8 @@
   <main class="card">
     <!-- EKRAN 1 -->
     <section id="viewAsk" class="view active">
-      <h1>Moje Drogie Cebulki! 
-        <p class="subtitle">Czy zostaniecie moją Walentynką?</p>
+      <h1>Drogie Cebulki!</h1>
+      <p class="subtitle">Czy zostaniecie moją Walentynką?</p>
 
       <div class="btns">
         <button class="yes" id="btnYes">Tak</button>
@@ -292,13 +242,53 @@
     <!-- EKRAN 3 -->
     <section id="viewLove" class="view">
       <div class="loveWrap" aria-hidden="true">
-        <div id="heartBox" class="heartBox">
-          <div class="heartBg">
-            <div class="shine"></div>
-          </div>
+        <div class="heartStage">
+          <!-- SVG serce: stabilne na telefonach -->
+          <svg viewBox="0 0 320 300" width="100%" height="auto" role="img" aria-label="Serce ze zdjęciem">
+            <defs>
+              <!-- klasyczne serce -->
+              <clipPath id="heartClip">
+                <path d="M160 284C160 284 22 202 22 118C22 55 65 22 118 22C141 22 157 32 160 52C163 32 179 22 202 22C255 22 298 55 298 118C298 202 160 284 160 284Z"/>
+              </clipPath>
 
-          <!-- ważne: plik photo2.jpg w repo -->
-          <img class="heartImg" src="photo2.jpg" alt="Zdjęcie Alicji i Oliwka" />
+              <!-- różowe tło -->
+              <linearGradient id="heartGrad" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#FB7185"/>
+                <stop offset="1" stop-color="#FDA4AF"/>
+              </linearGradient>
+
+              <!-- połysk -->
+              <linearGradient id="shineGrad" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0" stop-color="rgba(255,255,255,0)"/>
+                <stop offset="0.5" stop-color="rgba(255,255,255,0.35)"/>
+                <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- różowe serce “startowe” -->
+            <path d="M160 284C160 284 22 202 22 118C22 55 65 22 118 22C141 22 157 32 160 52C163 32 179 22 202 22C255 22 298 55 298 118C298 202 160 284 160 284Z"
+                  fill="url(#heartGrad)"/>
+
+            <!-- zdjęcie w sercu -->
+            <!-- WAŻNE: tu jest nazwa pliku -->
+            <image id="heartPhoto"
+                   class="photoHidden"
+                   href="photo2.jpg"
+                   x="0" y="0" width="320" height="300"
+                   preserveAspectRatio="xMidYMid slice"
+                   clip-path="url(#heartClip)"></image>
+
+            <!-- połysk -->
+            <g clip-path="url(#heartClip)" opacity="0.85">
+              <rect x="-160" y="-40" width="220" height="420" fill="url(#shineGrad)" transform="rotate(18 160 150)">
+                <animate attributeName="x" values="-240; 420" dur="2.2s" repeatCount="indefinite"/>
+              </rect>
+            </g>
+          </svg>
+
+          <div id="debug" class="debug">
+            Jeśli nadal nie widać zdjęcia: sprawdź czy plik w repo nazywa się dokładnie <b>photo2.jpg</b> (wielkość liter też ma znaczenie).
+          </div>
         </div>
       </div>
 
@@ -322,7 +312,8 @@
     const btnRed = document.getElementById("btnRed");
     const btnOpen = document.getElementById("btnOpen");
 
-    const heartBox = document.getElementById("heartBox");
+    const heartPhoto = document.getElementById("heartPhoto");
+    const debug = document.getElementById("debug");
 
     btnYes.addEventListener("click", goOpen);
     btnRed.addEventListener("click", goOpen);
@@ -338,9 +329,17 @@
       viewOpen.classList.remove("active");
       viewLove.classList.add("active");
 
-      // Najpierw różowe serce, potem zdjęcie
-      heartBox.classList.remove("showPhoto");
-      setTimeout(() => heartBox.classList.add("showPhoto"), 650);
+      // najpierw różowe serce, potem foto
+      setTimeout(() => {
+        heartPhoto.classList.remove("photoHidden");
+        heartPhoto.classList.add("photoShown");
+      }, 650);
+
+      // debug: jeśli zdjęcie się nie załaduje, pokaż hint
+      const imgTest = new Image();
+      imgTest.onload = () => {};
+      imgTest.onerror = () => debug.classList.add("show");
+      imgTest.src = "photo2.jpg";
 
       burstHearts(18);
       setInterval(() => spawnHeart(randomEmoji()), 800);
